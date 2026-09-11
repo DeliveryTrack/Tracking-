@@ -2,26 +2,569 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>GiftHub Parcel Tracking</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="container">
-  <div class="brand">🎁 GiftHub</div>
-  <h1>Parcel Tracking</h1>
-  <p class="subtitle">Enter your registered mobile number to track your handwriting parcel.</p>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <div class="track-box">
-    <label for="mobile">Mobile Number</label>
-    <input id="mobile" type="tel" maxlength="10" placeholder="Enter 10 digit mobile number">
-    <button onclick="trackParcel()">Track Parcel</button>
-    <p id="message"></p>
+<title>Premium Gifts Store - Real Tracking</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#f5f6f8;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#172033;
+}
+
+.header{
+  background:#fff;
+  padding:18px 20px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:800;
+}
+
+.sub{
+  color:#697386;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.container{
+  max-width:650px;
+  margin:auto;
+  padding:18px 14px 40px;
+}
+
+.demo{
+  background:#fff7d6;
+  border:1px solid #f0df91;
+  color:#725900;
+  padding:10px;
+  border-radius:8px;
+  text-align:center;
+  font-size:11px;
+  font-weight:bold;
+  margin-bottom:12px;
+}
+
+.search-card,
+.card{
+  background:#fff;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.06);
+}
+
+.search-card{
+  padding:22px;
+}
+
+.title{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.subtitle{
+  color:#667085;
+  font-size:14px;
+  margin-bottom:18px;
+}
+
+input{
+  width:100%;
+  height:52px;
+  border:1px solid #d0d5dd;
+  border-radius:8px;
+  padding:0 15px;
+  font-size:16px;
+  outline:none;
+}
+
+button{
+  width:100%;
+  height:52px;
+  margin-top:12px;
+  border:0;
+  border-radius:8px;
+  background:#4f46e5;
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.error{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  background:#fff1f2;
+  color:#be123c;
+  border-radius:8px;
+  text-align:center;
+}
+
+.result{
+  display:none;
+  margin-top:16px;
+}
+
+.card{
+  padding:20px;
+  margin-bottom:14px;
+}
+
+.status{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:18px;
+  border-bottom:1px solid #eaecf0;
+}
+
+.status-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.status-icon{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#e9f8ef;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+.status h2{
+  margin:0;
+  font-size:18px;
+}
+
+.status p{
+  margin:4px 0 0;
+  color:#667085;
+  font-size:12px;
+}
+
+.badge{
+  background:#e9f8ef;
+  color:#087443;
+  padding:7px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin-top:20px;
+}
+
+.info-item label{
+  display:block;
+  color:#667085;
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.info-item strong{
+  font-size:14px;
+}
+
+.full{
+  grid-column:1/-1;
+}
+
+.delivery{
+  background:#f8f9ff;
+  border:1px solid #e1e4ff;
+  padding:18px;
+  border-radius:10px;
+  text-align:center;
+}
+
+.delivery small{
+  color:#667085;
+}
+
+.delivery strong{
+  display:block;
+  font-size:22px;
+  margin-top:5px;
+}
+
+.delivery span{
+  display:block;
+  margin-top:7px;
+  font-size:13px;
+  font-weight:700;
+}
+
+.route-title{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+.timeline{
+  position:relative;
+  padding-left:35px;
+}
+
+.timeline:before{
+  content:"";
+  position:absolute;
+  left:9px;
+  top:8px;
+  bottom:8px;
+  width:2px;
+  background:#d9dce3;
+}
+
+.step{
+  position:relative;
+  margin-bottom:28px;
+}
+
+.step:last-child{
+  margin-bottom:0;
+}
+
+.circle{
+  position:absolute;
+  left:-32px;
+  top:2px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid #c9ced8;
+  z-index:2;
+}
+
+.step.done .circle,
+.step.current .circle{
+  background:#4f46e5;
+  border-color:#4f46e5;
+}
+
+.step.current .circle{
+  box-shadow:0 0 0 5px #e7e7ff;
+}
+
+.step-title{
+  font-weight:700;
+  font-size:15px;
+}
+
+.step-date{
+  color:#667085;
+  font-size:12px;
+  margin-top:5px;
+}
+
+.step-desc{
+  color:#667085;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.footer{
+  text-align:center;
+  color:#98a2b3;
+  font-size:11px;
+  margin-top:20px;
+}
+
+@media(max-width:500px){
+  .info{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+
+  .status{
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .badge{
+    white-space:nowrap;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">PREMIUM GIFTS STORE</div>
+  <div class="sub">Shipment Tracking</div>
+</header>
+
+<div class="container">
+
+<div class="demo">
+  REAL TRACKING — DATA FOR TESTING
+</div>
+
+<div class="search-card">
+
+  <div class="title">
+    Track Your Order
   </div>
 
-  <div id="result" class="result hidden"></div>
+  <div class="subtitle">
+    Enter your registered mobile number to view demo shipment details.
+  </div>
+
+  <input
+    type="tel"
+    id="mobile"
+    placeholder="Enter 10 digit mobile number"
+    maxlength="10"
+  >
+
+  <button onclick="trackOrder()">
+    TRACK ORDER
+  </button>
+
+  <div class="error" id="error">
+    Real order not found. Please check the mobile number.
+  </div>
+
 </div>
-<script src="data.js"></script>
-<script src="script.js"></script>
+
+<div class="result" id="result">
+
+<div class="card">
+
+  <div class="status">
+
+    <div class="status-left">
+
+      <div class="status-icon">
+        🚚
+      </div>
+
+      <div>
+        <h2>Shipment In Transit</h2>
+        <p>Shipment is currently moving towards destination</p>
+      </div>
+
+    </div>
+
+    <div class="badge">
+      IN TRANSIT
+    </div>
+
+  </div>
+
+  <div class="info">
+
+    <div class="info-item">
+      <label>Customer</label>
+      <strong>Mahi Singh</strong>
+    </div>
+
+    <div class="info-item">
+      <label>Order ID</label>
+      <strong>MS-1309</strong>
+    </div>
+
+    <div class="info-item">
+      <label>Mobile</label>
+      <strong>8127540880</strong>
+    </div>
+
+    <div class="info-item">
+      <label>Dispatch Date</label>
+      <strong>11 Sep 2026</strong>
+    </div>
+
+    <div class="info-item">
+      <label>Current Location</label>
+      <strong>200 KM from Delhi</strong>
+    </div>
+
+    <div class="info-item">
+      <label>Destination</label>
+      <strong>Gadia, Barabanki</strong>
+    </div>
+
+    <div class="info-item full">
+      <label>Delivery Address</label>
+      <strong>
+        Primary School Gadia First, Vill +1, Gadia,
+        Tehsil Nawabganj, Barabanki,
+        Uttar Pradesh - 225001
+      </strong>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="card">
+
+  <div class="delivery">
+    <small>Expected Delivery</small>
+    <strong>12 September 2026</strong>
+    <span>Tomorrow • Between 2:00 PM – 3:00 PM</span>
+  </div>
+
+</div>
+
+<div class="card">
+
+  <div class="route-title">
+    Shipment Journey
+  </div>
+
+  <div class="timeline">
+
+    <div class="step done">
+
+      <div class="circle"></div>
+
+      <div class="step-title">
+        Shipment Booked
+      </div>
+
+      <div class="step-date">
+        11 Sep 2026
+      </div>
+
+      <div class="step-desc">
+        Order information received
+      </div>
+
+    </div>
+
+    <div class="step done">
+
+      <div class="circle"></div>
+
+      <div class="step-title">
+        Dispatched from Delhi
+      </div>
+
+      <div class="step-date">
+        11 Sep 2026
+      </div>
+
+      <div class="step-desc">
+        Shipment dispatched towards destination
+      </div>
+
+    </div>
+
+    <div class="step current">
+
+      <div class="circle"></div>
+
+      <div class="step-title">
+        In Transit
+      </div>
+
+      <div class="step-date">
+        11 Sep 2026
+      </div>
+
+      <div class="step-desc">
+        Shipment is approximately 200 KM from Delhi
+      </div>
+
+    </div>
+
+    <div class="step">
+
+      <div class="circle"></div>
+
+      <div class="step-title">
+        Out for Delivery
+      </div>
+
+      <div class="step-date">
+        12 Sep 2026
+      </div>
+
+      <div class="step-desc">
+        Expected to go out for delivery tomorrow
+      </div>
+
+    </div>
+
+    <div class="step">
+
+      <div class="circle"></div>
+
+      <div class="step-title">
+        Delivered
+      </div>
+
+      <div class="step-date">
+        Expected: 12 Sep 2026
+      </div>
+
+      <div class="step-desc">
+        Expected delivery between 2:00 PM – 3:00 PM
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</div>
+
+<div class="footer">
+  REAL TRACKING SYSTEM — FOR TESTING USE
+</div>
+
+</div>
+
+<script>
+
+function trackOrder(){
+
+  const mobile =
+    document.getElementById("mobile").value.trim();
+
+  const result =
+    document.getElementById("result");
+
+  const error =
+    document.getElementById("error");
+
+  result.style.display = "none";
+  error.style.display = "none";
+
+  if(mobile === "8127540880"){
+
+    result.style.display = "block";
+
+  }else{
+
+    error.style.display = "block";
+
+  }
+
+}
+
+</script>
+
 </body>
 </html>
